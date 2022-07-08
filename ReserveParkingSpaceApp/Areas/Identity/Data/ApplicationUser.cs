@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using ReserveParkingSpaceApp.Models;
 
 namespace ReserveParkingSpaceApp.Areas.Identity.Data;
 
@@ -10,7 +11,8 @@ namespace ReserveParkingSpaceApp.Areas.Identity.Data;
 public class ApplicationUser : IdentityUser
 {
     public string FirstName { get; set; }
-    public string LastName { get; set; }
+    public string LastName { get; set; }    
     public string Department { get; set; }
+    public ICollection<ParkingSpot> ReservedSpot { get; set; }
 }
 

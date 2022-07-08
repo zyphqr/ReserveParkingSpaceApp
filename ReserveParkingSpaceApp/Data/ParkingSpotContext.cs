@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ReserveParkingSpaceApp.Areas.Identity.Data;
 using ReserveParkingSpaceApp.Models;
 
 namespace ReserveParkingSpaceApp.Data
@@ -10,5 +11,11 @@ namespace ReserveParkingSpaceApp.Data
 
         }
         public DbSet<ParkingSpot> ParkingSpots { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<ApplicationUser>()
+                .HasMany(a => a.ReservedSpot)
+                .WithOne(p => p.applicationUser);
+        }
     }
 }

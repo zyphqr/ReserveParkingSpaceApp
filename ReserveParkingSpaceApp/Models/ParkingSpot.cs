@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ReserveParkingSpaceApp.Areas.Identity.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace ReserveParkingSpaceApp.Models
 {
@@ -6,7 +7,9 @@ namespace ReserveParkingSpaceApp.Models
     {
         [Key]
         public int Id { get; set; }
-        public bool IsTaken { get; set; }
-        public string TakenBy { get; set; }
+        public bool? IsTaken { get; set; }
+        public string? TakenBy { get; set; }
+
+        public ApplicationUser applicationUser { get; set; }   
     }
 }

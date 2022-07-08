@@ -13,9 +13,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();;
 
-//*********
+
 builder.Services.AddDbContext<ParkingSpotContext>(options => 
-    options.UseSqlServer(connectionString)); ;
+    options.UseSqlServer(connectionString));;
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
