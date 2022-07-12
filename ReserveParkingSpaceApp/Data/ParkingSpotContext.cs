@@ -13,9 +13,9 @@ namespace ReserveParkingSpaceApp.Data
         public DbSet<ParkingSpot> ParkingSpots { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<ApplicationUser>()
-                .HasMany(a => a.ReservedSpot)
-                .WithOne(p => p.applicationUser);
+            builder.Entity<ParkingSpot>()
+                .HasOne<ApplicationUser>(a => a.Takenby)
+                .WithMany(p => p.ReservedSpot);
         }
     }
 }

@@ -8,8 +8,18 @@ namespace ReserveParkingSpaceApp.Models
         [Key]
         public int Id { get; set; }
         public bool? IsTaken { get; set; }
-        public string? TakenBy { get; set; }
+        
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public Shift SpotShift { get; set; }
+        public ApplicationUser Takenby { get; set; }  
+        
+        public enum Shift
+        {
+            FirstShift = 1,
+            SecondShift = 2,
+            AllDayShift = 3,
 
-        public ApplicationUser applicationUser { get; set; }   
+        }
     }
 }
