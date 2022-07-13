@@ -1,8 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
-    @using ReserveParkingSpaceApp.Models;
-    @using static ReserveParkingSpaceApp.Models.ParkingSpot
-    @model ParkingSpot;
+    @using ReserveParkingSpaceApp.ViewModels
+    @model ParkingSpot; 
 }
 
 <!DOCTYPE html>
@@ -18,31 +17,15 @@
   <div class="container">
         <div class="row">
             <div class="col-md-3 bg-light text-dark">
-                <div class="btn-group-vertical" data-toggle="buttons">
-                    <div class="btn-group btn-group-toggle">                        
-                        <button id="btn1" class="btn btn-outline-danger" onclick="openModal(1)">1st shift</button>
-                        <button id="btn2" class="btn btn-outline-danger" onclick="openModal(2)">2nd shift</button>
-                    </div>
-                    <button id="btn3" class="btn btn-outline-danger" onclick="openModal(3)">All day</button>
+                <div class="btn-group-vertical" data-toggle="buttons">                       
+                        <button id="btn1" class="btn @(Model.IsTaken ? "btn-danger" : "btn-success")" onclick="openModal(1)">Save parking space</button>
+                        <button id="btn2" class="btn btn-outline-danger">Release</button>
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
 
-    <div id="popUp" class="bg-modal">
-        <div class="modal-content">
-            <div id="closeModal" class="close">+</div>
-            <form action="">
-                @Html.DropDownListFor(m => m.SpotShift, 
-                new SelectList(Enum.GetValues(typeof(Shift))), 
-                "Select shift")
-                <label>Period</label>
-                <input type="date">
-                <input type="submit">Save
-            </form>
-        </div>
-        </div>
-    
+    <partial name="Partials/_ReserveForm.cshtml" model='new ParkingReservation{SpotId = 1}'></partial>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

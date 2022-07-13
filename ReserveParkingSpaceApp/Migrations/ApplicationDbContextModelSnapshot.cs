@@ -171,11 +171,6 @@ namespace ReserveParkingSpaceApp.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Department")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -222,6 +217,9 @@ namespace ReserveParkingSpaceApp.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<int>("UserDepartment")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -237,6 +235,36 @@ namespace ReserveParkingSpaceApp.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("ReserveParkingSpaceApp.Models.ParkingSpot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsTaken")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("SpotShift")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TakenbyId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TakenbyId");
+
+                    b.ToTable("ParkingSpots");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -288,6 +316,20 @@ namespace ReserveParkingSpaceApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ReserveParkingSpaceApp.Models.ParkingSpot", b =>
+                {
+                    b.HasOne("ReserveParkingSpaceApp.Areas.Identity.Data.ApplicationUser", "Takenby")
+                        .WithMany("ReservedSpot")
+                        .HasForeignKey("TakenbyId");
+
+                    b.Navigation("Takenby");
+                });
+
+            modelBuilder.Entity("ReserveParkingSpaceApp.Areas.Identity.Data.ApplicationUser", b =>
+                {
+                    b.Navigation("ReservedSpot");
                 });
 #pragma warning restore 612, 618
         }

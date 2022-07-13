@@ -23,9 +23,14 @@
                 <span asp-validation-for="Input.LastName" class="text-danger"></span>
             </div>
              <div class="form-floating">
-                <input asp-for="Input.Department" class="form-control" autocomplete="department" aria-required="true" />
-                <label asp-for="Input.Department"></label>
-                <span asp-validation-for="Input.Department" class="text-danger"></span>
+                  @Html.DropDownListFor(
+                      m => m.Input.UserDepartment,
+                      Html.GetEnumSelectList(typeof(ApplicationUser.Department)),
+                      "Select department",
+                      new {@class="form-control"}
+                  )
+                <label asp-for="Input.UserDepartment"></label>
+                <span asp-validation-for="Input.UserDepartment" class="text-danger"></span>
             </div>
             <div class="form-floating">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />

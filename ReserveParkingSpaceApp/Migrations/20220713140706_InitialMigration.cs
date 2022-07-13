@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ReserveParkingSpaceApp.Migrations
 {
-    public partial class InitApplicationUser : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,7 +30,7 @@ namespace ReserveParkingSpaceApp.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Department = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    UserDepartment = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -157,6 +157,28 @@ namespace ReserveParkingSpaceApp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ParkingSpots",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IsTaken = table.Column<bool>(type: "bit", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SpotShift = table.Column<int>(type: "int", nullable: true),
+                    TakenbyId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParkingSpots", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ParkingSpots_AspNetUsers_TakenbyId",
+                        column: x => x.TakenbyId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -195,6 +217,11 @@ namespace ReserveParkingSpaceApp.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParkingSpots_TakenbyId",
+                table: "ParkingSpots",
+                column: "TakenbyId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -213,6 +240,9 @@ namespace ReserveParkingSpaceApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "ParkingSpots");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

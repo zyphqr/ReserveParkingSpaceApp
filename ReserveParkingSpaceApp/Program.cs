@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ReserveParkingSpaceApp.Areas.Identity.Data;
-using ReserveParkingSpaceApp.Data;
+using ReserveParkingSpaceApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
@@ -13,12 +13,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();;
 
-
-builder.Services.AddDbContext<ParkingSpotContext>(options => 
-    options.UseSqlServer(connectionString));;
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<ParkingSpotService>();
 
 var app = builder.Build();
 

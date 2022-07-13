@@ -1,4 +1,5 @@
 ﻿using ReserveParkingSpaceApp.Areas.Identity.Data;
+using ReserveParkingSpaceApp.ViewModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace ReserveParkingSpaceApp.Models
@@ -7,19 +8,14 @@ namespace ReserveParkingSpaceApp.Models
     {
         [Key]
         public int Id { get; set; }
-        public bool? IsTaken { get; set; }
+        public bool IsTaken { get; set; }
         
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public Shift SpotShift { get; set; }
-        public ApplicationUser Takenby { get; set; }  
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public ParkingReservation.Shift? SpotShift { get; set; }
+        public string? TakenbyId { get; set; }  
+        public ApplicationUser? Takenby { get; set; }  
         
-        public enum Shift
-        {
-            FirstShift = 1,
-            SecondShift = 2,
-            AllDayShift = 3,
-
-        }
+       
     }
 }
