@@ -1,21 +1,16 @@
 ﻿using ReserveParkingSpaceApp.Areas.Identity.Data;
 using ReserveParkingSpaceApp.ViewModels;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReserveParkingSpaceApp.Models
 {
     public class ParkingSpot
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
-        public bool IsTaken { get; set; }
-        
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public ParkingReservation.Shift? SpotShift { get; set; }
-        public string? TakenbyId { get; set; }  
-        public ApplicationUser? Takenby { get; set; }  
-        
-       
+
+        public ICollection<ParkingSpotReservation> Reservations { get; set; }
     }
 }

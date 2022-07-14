@@ -1,18 +1,39 @@
-﻿var modal = document.getElementById('popUp');
+﻿
+function openModal(spot) {
+    $.ajax({
+        type: "GET",
+        url: "/Home/ReserveForm?spotId=" + spot,
+        data: {},
+        success: function (response) {
+            $("#modalContainer").html(response);
 
-function openModal() {
-    modal.style.display = "block";
+            var modal = document.getElementById('popUp');
+            modal.style.display = "block";
+            document.querySelector('#closeModal').addEventListener('click', function () {
+                document.querySelector('#popUp').style.display = 'none';
+                console.log("It works");
+            });
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+    })
 }
 
-document.querySelector('#closeModal').addEventListener('click', function () {
-    document.querySelector('#popUp').style.display = 'none';
-    console.log("It works");
-});
+function cancelReservations(spot) {
+    //var button = $(this);
 
-window.onclick = function (event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
+    $.ajax({
+        type: "GET",
+        url: "/Home/CancelSpotReservation?spotId=" + spot,
+        data: {},
+        success: function (response) {
+            $("body").append(response);
+        }
+    })
 }
 
 

@@ -16,7 +16,7 @@ public class ApplicationUser : IdentityUser
     public string FirstName { get; set; }
     public string LastName { get; set; }    
     public Department UserDepartment { get; set; }
-    public ICollection<ParkingSpot> ReservedSpot { get; set; }
+    public ICollection<ParkingSpotReservation> ReservedSpots { get; set; }
 
     public enum Department
     {

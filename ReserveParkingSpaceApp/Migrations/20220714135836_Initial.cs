@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ReserveParkingSpaceApp.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,6 +49,17 @@ namespace ReserveParkingSpaceApp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ParkingSpots",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParkingSpots", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -158,25 +169,31 @@ namespace ReserveParkingSpaceApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ParkingSpots",
+                name: "ParkingSpotReservation",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IsTaken = table.Column<bool>(type: "bit", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     SpotShift = table.Column<int>(type: "int", nullable: true),
-                    TakenbyId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    TakenbyId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    SpotId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ParkingSpots", x => x.Id);
+                    table.PrimaryKey("PK_ParkingSpotReservation", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ParkingSpots_AspNetUsers_TakenbyId",
+                        name: "FK_ParkingSpotReservation_AspNetUsers_TakenbyId",
                         column: x => x.TakenbyId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ParkingSpotReservation_ParkingSpots_SpotId",
+                        column: x => x.SpotId,
+                        principalTable: "ParkingSpots",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -219,8 +236,13 @@ namespace ReserveParkingSpaceApp.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ParkingSpots_TakenbyId",
-                table: "ParkingSpots",
+                name: "IX_ParkingSpotReservation_SpotId",
+                table: "ParkingSpotReservation",
+                column: "SpotId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParkingSpotReservation_TakenbyId",
+                table: "ParkingSpotReservation",
                 column: "TakenbyId");
         }
 
@@ -242,13 +264,16 @@ namespace ReserveParkingSpaceApp.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ParkingSpots");
+                name: "ParkingSpotReservation");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "ParkingSpots");
         }
     }
 }

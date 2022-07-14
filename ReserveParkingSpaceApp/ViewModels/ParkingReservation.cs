@@ -5,9 +5,16 @@ namespace ReserveParkingSpaceApp.ViewModels
 {
     public class ParkingReservation
     {
+        [Required]
         public int SpotId { get; set; }
+
+        [Required]
         public DateTime StartDate { get; set; } = DateTime.Now;
+
+        [Required]
         public DateTime EndDate { get; set; } = DateTime.Now.AddDays(1);
+
+        [Required]
         public Shift SpotShift { get; set; }
 
         public enum Shift

@@ -12,8 +12,8 @@ using ReserveParkingSpaceApp.Areas.Identity.Data;
 namespace ReserveParkingSpaceApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220713140706_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20220714135836_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -242,6 +242,16 @@ namespace ReserveParkingSpaceApp.Migrations
             modelBuilder.Entity("ReserveParkingSpaceApp.Models.ParkingSpot", b =>
                 {
                     b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ParkingSpots");
+                });
+
+            modelBuilder.Entity("ReserveParkingSpaceApp.Models.ParkingSpotReservation", b =>
+                {
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -250,8 +260,8 @@ namespace ReserveParkingSpaceApp.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsTaken")
-                        .HasColumnType("bit");
+                    b.Property<int>("SpotId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("SpotShift")
                         .HasColumnType("int");
@@ -264,9 +274,11 @@ namespace ReserveParkingSpaceApp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SpotId");
+
                     b.HasIndex("TakenbyId");
 
-                    b.ToTable("ParkingSpots");
+                    b.ToTable("ParkingSpotReservation");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -320,18 +332,31 @@ namespace ReserveParkingSpaceApp.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ReserveParkingSpaceApp.Models.ParkingSpot", b =>
+            modelBuilder.Entity("ReserveParkingSpaceApp.Models.ParkingSpotReservation", b =>
                 {
+                    b.HasOne("ReserveParkingSpaceApp.Models.ParkingSpot", "Spot")
+                        .WithMany("Reservations")
+                        .HasForeignKey("SpotId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ReserveParkingSpaceApp.Areas.Identity.Data.ApplicationUser", "Takenby")
-                        .WithMany("ReservedSpot")
+                        .WithMany("ReservedSpots")
                         .HasForeignKey("TakenbyId");
+
+                    b.Navigation("Spot");
 
                     b.Navigation("Takenby");
                 });
 
             modelBuilder.Entity("ReserveParkingSpaceApp.Areas.Identity.Data.ApplicationUser", b =>
                 {
-                    b.Navigation("ReservedSpot");
+                    b.Navigation("ReservedSpots");
+                });
+
+            modelBuilder.Entity("ReserveParkingSpaceApp.Models.ParkingSpot", b =>
+                {
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }
