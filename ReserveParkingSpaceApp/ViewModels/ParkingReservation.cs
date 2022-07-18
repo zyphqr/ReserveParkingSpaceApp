@@ -1,4 +1,5 @@
-﻿using ReserveParkingSpaceApp.Models;
+﻿using ReserveParkingSpaceApp.Common;
+using ReserveParkingSpaceApp.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace ReserveParkingSpaceApp.ViewModels
@@ -15,17 +16,7 @@ namespace ReserveParkingSpaceApp.ViewModels
         public DateTime EndDate { get; set; } = DateTime.Now.AddDays(1);
 
         [Required]
-        public Shift SpotShift { get; set; }
+        public ShiftTypes SpotShift { get; set; }
 
-        public enum Shift
-        {
-            [Display(Name = "First shift")]
-            FirstShift = 1,
-            [Display(Name = "Second shift")]
-            SecondShift = 2,
-            [Display(Name = "All day shift")]
-            AllDayShift = 3,
-
-        }
     }
 }

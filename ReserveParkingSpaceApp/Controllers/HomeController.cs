@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ReserveParkingSpaceApp.Areas.Identity.Data;
+using ReserveParkingSpaceApp.Common;
 using ReserveParkingSpaceApp.Models;
 using ReserveParkingSpaceApp.Services;
 using ReserveParkingSpaceApp.ViewModels;
@@ -26,19 +27,8 @@ namespace ReserveParkingSpaceApp.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            var parkingSpots = _parkingSpotService.GetAllSpotsWithReservations();
 
-            var vm = new IndexVM
-            {
-                ParkingSpots = parkingSpots.Select(spot => new IndexVM.ParkingSpotVM
-                {
-                    SpotId = spot.Id,
-                    IsReserved = spot.Reservations.Any(reservation => DateTime.Today >= reservation.StartDate
-                                                                    && DateTime.Today <= reservation.EndDate)
-                }).ToList()
-            };
-
-            return View(vm);
+            return View();
         }
 
         public IActionResult Privacy()
@@ -52,13 +42,47 @@ namespace ReserveParkingSpaceApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        [HttpPost]
+        [Authorize]
+        public IActionResult DateShift(DateShiftVM dateShift)
+        {
+            var parkingSpots = _parkingSpotService.GetAllSpotsWithReservations();
+
+            var vm = new ParkingSpotsGridVM
+            {
+                ParkingSpots = parkingSpots.Select(spot => {
+                    var reservation = spot.Reservations.Where(reservation => dateShift.Date >= reservation.StartDate
+                                                                        && dateShift.Date <= reservation.EndDate
+                                                                        && (dateShift.SpotShift == reservation.SpotShift
+                                                                        || (dateShift.SpotShift == ShiftTypes.AllDayShift
+                                                                        || reservation.SpotShift == ShiftTypes.AllDayShift))).ToList();
+                    var userFirstShift =  _userManager.FindByIdAsync(reservation?.FirstOrDefault(firstReservation => firstReservation.SpotShift == ShiftTypes.AllDayShift
+                                                                                                 || firstReservation.SpotShift == ShiftTypes.FirstShift)?.TakenbyId).Result;
+                    var userSecondShift =  _userManager.FindByIdAsync(reservation?.LastOrDefault(lastReservation => lastReservation.SpotShift == ShiftTypes.AllDayShift
+                                                                                                 || lastReservation.SpotShift == ShiftTypes.SecondShift)?.TakenbyId).Result;
+                    return new ParkingSpotsGridVM.ParkingSpotVM
+                    {
+                        SpotId = spot.Id,
+                        IsReserved = reservation.Any(),                    
+                        ReserverFirstShiftFullName = userFirstShift?.FirstName + " " + userFirstShift?.LastName,
+                        ReserverSecondShiftFullName = userSecondShift?.FirstName + " " + userSecondShift?.LastName,
+
+                    };
+                }).ToList()
+            };
+            return PartialView("Views/Home/Partials/_ParkingSpotsGrid.cshtml", vm);
+        }
+
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> ReserveForm(int spotId)
+        public async Task<IActionResult> ReserveForm(int spotId, DateTime date, ShiftTypes shift)
         {
             return PartialView("Views/Home/Partials/_ReserveForm.cshtml", new ParkingReservation
             {
                 SpotId = spotId,
+                StartDate = date,
+                EndDate = date, 
+                SpotShift = shift,
             });
         }
 

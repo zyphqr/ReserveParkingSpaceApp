@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReserveParkingSpaceApp.Areas.Identity.Data;
+using ReserveParkingSpaceApp.Common;
 using ReserveParkingSpaceApp.Models;
 using ReserveParkingSpaceApp.ViewModels;
 
@@ -23,12 +24,22 @@ namespace ReserveParkingSpaceApp.Services
             }
             return spot;
         }
-        public void ReserveSpot(int spotId, ApplicationUser user, DateTime startDate, DateTime endDate, ParkingReservation.Shift spotShift)
+        public void ReserveSpot(int spotId, ApplicationUser user, DateTime startDate, DateTime endDate, ShiftTypes spotShift)
         {
             var spot = _applicationContext.ParkingSpots.Include(x => x.Reservations).FirstOrDefault(spot => spot.Id == spotId);
             if (spot == null)
             {
                 throw new Exception("Parking spot does not exist");
+            }
+            TimeSpan durationCheck = endDate - startDate;
+            TimeSpan inAdvanceCheck = startDate - DateTime.Today;
+            if (durationCheck.Days > 7)
+            {
+                throw new Exception("Spot cannot be reserved for more than 7 days.");
+            }
+            else if (inAdvanceCheck.Days >= System.DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month))
+            {
+                throw new Exception("Spot cannot be reserved more than a month in advance.");
             }
 
             foreach (var reservation in spot.Reservations)
@@ -37,10 +48,10 @@ namespace ReserveParkingSpaceApp.Services
                     || (reservation.EndDate >= startDate && reservation.EndDate <= endDate))
                 {
                     if (reservation.SpotShift == spotShift
-                        || spotShift == ParkingReservation.Shift.AllDayShift
-                        || reservation.SpotShift == ParkingReservation.Shift.AllDayShift)
+                        || spotShift == ShiftTypes.AllDayShift
+                        || reservation.SpotShift == ShiftTypes.AllDayShift)
                     {
-                        throw new Exception("The spot is already reserved for that time period");
+                        throw new Exception("The spot is already reserved for that time period.");
                     }
                 }
             }

@@ -1,8 +1,7 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-    @using ReserveParkingSpaceApp.ViewModels
-    @model IndexVM;
+﻿@using ReserveParkingSpaceApp.ViewModels
 
+@{
+    ViewData["Title"] = "Home Page";
 }
 
 <!DOCTYPE html>
@@ -17,18 +16,10 @@
 <body>
     @if (User.Identity.Name != null)
     {
+        <partial name="~/Views/Home/Partials/_DateShiftForm.cshtml" model="new DateShiftVM()"></partial>
         <div class="container">
-            <div class="row bg-light text-dark">
-                @for (int i = 1; i <= Model.ParkingSpots.Count; i++)
-                {
-                    <div class="col-md-3  mb-4">
-                        <div class="btn-group-vertical" data-toggle="buttons">
-                            <button id="btnSave_@i" class="btn @(Model.ParkingSpots[i-1].IsReserved ? "btn-danger" : "btn-success")" onclick="openModal(@i)">Save parking space @i</button>
-                            <button type="button" id="btnCancel_@i" class="btn btn-outline-danger" onclick="cancelReservations(@i)">Cancel Reservation</button>
-                        </div>
-                    </div>
-                }
-
+            <div id="parkingSpotsGrid" class="row bg-light text-dark">
+                <p>Select date and shift.</p>
             </div>
         </div>
 

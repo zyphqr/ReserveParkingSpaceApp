@@ -1,0 +1,17 @@
+﻿@using ReserveParkingSpaceApp.ViewModels
+@model ParkingSpotsGridVM;
+
+@{
+}
+
+@for (int i = 1; i <= Model.ParkingSpots.Count; i++)
+{
+    <div class="col-md-3 mb-4">
+        <div class="btn-group-vertical" data-toggle="buttons">
+            <p>@Model.ParkingSpots[i-1].ReserverFirstShiftFullName</p>
+            <p>@Model.ParkingSpots[i-1].ReserverSecondShiftFullName</p>
+            <button id="btnSave_@i" class="btn @(Model.ParkingSpots[i-1].IsReserved ? "btn-danger" : "btn-success")" onclick="openModal(@i)">Save parking space @i</button>
+            <button type="button" id="btnCancel_@i" class="btn btn-outline-danger" onclick="cancelReservations(@i)">Cancel Reservation</button>
+        </div>
+    </div>
+}

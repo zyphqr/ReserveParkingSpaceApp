@@ -1,4 +1,5 @@
-﻿@using ReserveParkingSpaceApp.Controllers
+﻿@using ReserveParkingSpaceApp.Common
+@using ReserveParkingSpaceApp.Controllers
 @using ReserveParkingSpaceApp.ViewModels
 @model ParkingReservation;
 
@@ -13,8 +14,8 @@
 
     <p>Reserving Spot @Model.SpotId</p>
     <div class="form-floating">
-        <select asp-for="SpotShift" class="form-select" asp-items="@Html.GetEnumSelectList(typeof(ParkingReservation.Shift))">
-            <option value=""></option>
+        <select asp-for="SpotShift" class="form-select" asp-items="@Html.GetEnumSelectList(typeof(ShiftTypes))">
+            <option value="selectShift">Select shift</option>
         </select>
         <label>Shift</label>
     </div>

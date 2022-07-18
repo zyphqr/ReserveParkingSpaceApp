@@ -1,8 +1,10 @@
 ﻿
 function openModal(spot) {
+    var dateValue = document.getElementById("Date").value;
+    var shift = document.getElementById("SpotShift").value;
     $.ajax({
         type: "GET",
-        url: "/Home/ReserveForm?spotId=" + spot,
+        url: "/Home/ReserveForm?spotId=" + spot + "&date=" + dateValue + "&shift=" + shift,
         data: {},
         success: function (response) {
             $("#modalContainer").html(response);
@@ -24,7 +26,6 @@ function openModal(spot) {
 }
 
 function cancelReservations(spot) {
-    //var button = $(this);
 
     $.ajax({
         type: "GET",
