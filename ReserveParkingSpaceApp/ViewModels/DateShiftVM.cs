@@ -9,7 +9,7 @@ namespace ReserveParkingSpaceApp.ViewModels
         public DateTime Date { get; set; } = DateTime.Now;
 
         [Required]
-        public ShiftTypes SpotShift { get; set; }
+        public ShiftTypes SpotShift { get; set; } = ShiftTypes.FirstShift;
 
     }
 }

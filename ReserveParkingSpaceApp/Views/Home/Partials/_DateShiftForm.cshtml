@@ -10,20 +10,25 @@
       data-ajax-update="#parkingSpotsGrid"
       data-ajax="true"
       data-ajax-method="POST">
-      <div asp-validation-summary="All" class="text-danger"></div>
+    <div asp-validation-summary="All" class="text-danger"></div>
 
-    <div class="form-floating">
-        <select asp-for="SpotShift" class="form-select" asp-items="@Html.GetEnumSelectList(typeof(ShiftTypes))">
-            <option value="selectShift">Select shift</option>
-        </select>
-        <label>Shift</label>
-    </div>
-    <div class="form-floating">
-        <input asp-for="Date" class="form-control" type="date">
-        <label>Date</label>
-        <span asp-validation-for="Date" class="text-danger"></span>
-    </div>
-    <div class="form-floating">
-        <input id="submitForm" type="submit" class="form-control" name="Save">
-    </div>
+    <div class="row g-2 mb-3">
+        <div class="col-md-3"></div>
+        <div class="col-md-3">
+            <div class="form-floating">
+                <select asp-for="SpotShift" class="form-select" asp-items="@Html.GetEnumSelectList(typeof(ShiftTypes))" onchange="updateDateShiftForm()">
+                    <option value="selectShift" disabled>Select shift</option>
+                </select>
+                <label>Shift</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-floating">
+                <input asp-for="Date" class="form-control" type="date" onchange="updateDateShiftForm()">
+                <label>Date</label>
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>  
 </form>

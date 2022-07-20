@@ -52,10 +52,8 @@ namespace ReserveParkingSpaceApp.Controllers
             {
                 ParkingSpots = parkingSpots.Select(spot => {
                     var reservation = spot.Reservations.Where(reservation => dateShift.Date >= reservation.StartDate
-                                                                        && dateShift.Date <= reservation.EndDate
-                                                                        && (dateShift.SpotShift == reservation.SpotShift
-                                                                        || (dateShift.SpotShift == ShiftTypes.AllDayShift
-                                                                        || reservation.SpotShift == ShiftTypes.AllDayShift))).ToList();
+                                                                        && dateShift.Date <= reservation.EndDate).ToList();
+
                     var userFirstShift =  _userManager.FindByIdAsync(reservation?.FirstOrDefault(firstReservation => firstReservation.SpotShift == ShiftTypes.AllDayShift
                                                                                                  || firstReservation.SpotShift == ShiftTypes.FirstShift)?.TakenbyId).Result;
                     var userSecondShift =  _userManager.FindByIdAsync(reservation?.LastOrDefault(lastReservation => lastReservation.SpotShift == ShiftTypes.AllDayShift
@@ -63,9 +61,11 @@ namespace ReserveParkingSpaceApp.Controllers
                     return new ParkingSpotsGridVM.ParkingSpotVM
                     {
                         SpotId = spot.Id,
-                        IsReserved = reservation.Any(),                    
-                        ReserverFirstShiftFullName = userFirstShift?.FirstName + " " + userFirstShift?.LastName,
-                        ReserverSecondShiftFullName = userSecondShift?.FirstName + " " + userSecondShift?.LastName,
+                        IsReserved = reservation!.Where(reservation => (dateShift.SpotShift == reservation.SpotShift
+                                                                        || (dateShift.SpotShift == ShiftTypes.AllDayShift
+                                                                        || reservation.SpotShift == ShiftTypes.AllDayShift))).Any(),                    
+                        ReserverFirstShiftFullName = userFirstShift != null ? $"{userFirstShift?.FirstName} {userFirstShift?.LastName}" : null,
+                        ReserverSecondShiftFullName = userSecondShift != null ? (userSecondShift?.FirstName + " " + userSecondShift?.LastName) : null,
 
                     };
                 }).ToList()
@@ -75,7 +75,7 @@ namespace ReserveParkingSpaceApp.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> ReserveForm(int spotId, DateTime date, ShiftTypes shift)
+        public IActionResult ReserveForm(int spotId, DateTime date, ShiftTypes shift)
         {
             return PartialView("Views/Home/Partials/_ReserveForm.cshtml", new ParkingReservation
             {
@@ -96,7 +96,7 @@ namespace ReserveParkingSpaceApp.Controllers
             }
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+                var user = await _userManager.FindByNameAsync(HttpContext.User.Identity!.Name);
 
                 try
                 {
@@ -105,7 +105,8 @@ namespace ReserveParkingSpaceApp.Controllers
                         user,
                         reservation.StartDate,
                         reservation.EndDate,
-                        reservation.SpotShift
+                        reservation.SpotShift,
+                        reservation.File
                    );
                     return Content("<script language='javascript' type='text/javascript'>window.location = '/';</script>");
                 }
@@ -120,10 +121,10 @@ namespace ReserveParkingSpaceApp.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> CancelSpotReservation(int spotId)
+        public async Task<IActionResult> CancelSpotReservation(int spotId, DateTime date)
         {
-            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-            int CancelledReservationCount = _parkingSpotService.CancelSpotReservation(spotId, user);
+            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity!.Name);
+            int CancelledReservationCount = _parkingSpotService.CancelSpotReservation(spotId, user, date);
 
             return Content($"<script language='javascript' type='text/javascript'>alert('{CancelledReservationCount} reservation/s at spot {spotId} successfully cancelled');window.location = '/';</script>");
         }

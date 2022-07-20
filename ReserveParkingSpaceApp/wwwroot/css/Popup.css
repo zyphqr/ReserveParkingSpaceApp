@@ -31,3 +31,18 @@
     cursor: pointer;    
 }
 
+#parkingSpotsGrid {
+    background-color: #333351;
+}
+
+.border{
+    border-color: #503D58; 
+}
+
+#border-col {
+    background-color: #8C6B9A;
+    color: #FFFFFF;
+}
+
+
+

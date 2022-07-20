@@ -14,8 +14,9 @@ namespace ReserveParkingSpaceApp.Models
         public ShiftTypes SpotShift { get; set; }
         public string? TakenbyId { get; set; }
         public ApplicationUser? Takenby { get; set; }
-
         public int SpotId { get; set; }
         public ParkingSpot Spot {get; set;} 
+        public string? FileName { get; set; }
+        public string? FilePath { get; set; }
     }
 }

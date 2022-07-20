@@ -26,10 +26,11 @@ function openModal(spot) {
 }
 
 function cancelReservations(spot) {
+    var dateValue = document.getElementById("Date").value;
 
     $.ajax({
         type: "GET",
-        url: "/Home/CancelSpotReservation?spotId=" + spot,
+        url: "/Home/CancelSpotReservation?spotId=" + spot + "&date=" + dateValue,
         data: {},
         success: function (response) {
             $("body").append(response);

@@ -10,7 +10,6 @@ namespace ReserveParkingSpaceApp.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
-
         public ICollection<ParkingSpotReservation> Reservations { get; set; }
     }
 }

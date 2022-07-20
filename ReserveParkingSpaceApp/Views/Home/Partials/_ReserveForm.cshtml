@@ -6,7 +6,7 @@
 @{
 }
 
-<form id="submitForm" data-ajax-url="@Url.Action("ReserveForm", "Home")"
+<form id="submitForm" method="post" enctype="multipart/form-data" data-ajax-url="@Url.Action("ReserveForm", "Home")"
       data-ajax-update="#modalContainer"
       data-ajax="true"
       data-ajax-method="POST">
@@ -15,7 +15,7 @@
     <p>Reserving Spot @Model.SpotId</p>
     <div class="form-floating">
         <select asp-for="SpotShift" class="form-select" asp-items="@Html.GetEnumSelectList(typeof(ShiftTypes))">
-            <option value="selectShift">Select shift</option>
+            <option value="Select shift">Select shift</option>
         </select>
         <label>Shift</label>
     </div>
@@ -28,6 +28,10 @@
         <input asp-for="EndDate" class="form-control" type="date">
         <label>End date</label>
         <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+    <div class="form-floating">
+        <input type="file" name="File" class="form-control form-control-sm" accept=".pdf,application/pdf">
+        <label >Upload schedule</label>
     </div>
     <div class="form-floating">
         <input id="submitForm" type="submit" class="form-control" name="Save">

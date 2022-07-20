@@ -18,5 +18,7 @@ namespace ReserveParkingSpaceApp.ViewModels
         [Required]
         public ShiftTypes SpotShift { get; set; }
 
+        public IFormFile? File { get; set; }
+
     }
 }
